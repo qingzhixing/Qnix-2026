@@ -18,8 +18,8 @@ BUILD_DIR = ./build/
 
 bootblock: $(SRC_DIR)boot_asm.S $(SRC_DIR)boot_main.cpp
 	mkdir -p $(BUILD_DIR)
-	g++ $(CCFLAGS) -I $(SRC_DIR) -c $(SRC_DIR)boot_main.cpp -o $(BUILD_DIR)boot_main.o
-	g++ $(CCFLAGS) -I $(SRC_DIR) -c $(SRC_DIR)boot_asm.S -o $(BUILD_DIR)boot_asm.o
+	g++ $(CCFLAGS) -fno-pic -nostdinc -I $(SRC_DIR) -c $(SRC_DIR)boot_main.cpp -o $(BUILD_DIR)boot_main.o
+	g++ $(CCFLAGS) -fno-pic -nostdinc -I $(SRC_DIR) -c $(SRC_DIR)boot_asm.S -o $(BUILD_DIR)boot_asm.o
 	ld -m elf_i386 -N -e start -Ttext 0x7C00 -o $(BUILD_DIR)bootblock.o $(BUILD_DIR)boot_asm.o $(BUILD_DIR)boot_main.o
 	objdump -S $(BUILD_DIR)bootblock.o > $(BUILD_DIR)bootblock.asm
 	objcopy -S -O binary -j .text $(BUILD_DIR)bootblock.o $(BUILD_DIR)bootblock.text
